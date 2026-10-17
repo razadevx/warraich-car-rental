@@ -1,0 +1,251 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  STAFF
+}
+
+enum OperationalStatus {
+  AVAILABLE
+  RENTED
+  MAINTENANCE
+  INACTIVE
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  BANK_TRANSFER
+  CREDIT_CARD
+  POS
+  CHEQUE
+}
+
+enum PaymentType {
+  RENTAL
+  DEPOSIT
+  REFUND
+  DAMAGE_CHARGE
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum MaintenanceStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum ExtraPriceType {
+  PER_DAY
+  FLAT
+}
+
+model User {
+  id           String            @id @default(uuid())
+  name         String
+  email        String            @unique
+  passwordHash String
+  role         Role              @default(STAFF)
+  isActive     Boolean           @default(true)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  auditLogs    BookingAuditLog[]
+}
+
+model Customer {
+  id                    String    @id @default(uuid())
+  fullName              String
+  phone                 String
+  email                 String
+  address               String?
+  drivingLicenceDetails String?
+  internalNotes         String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  bookings              Booking[]
+
+  @@index([email])
+  @@index([phone])
+}
+
+model Car {
+  id                 String              @id @default(uuid())
+  registrationNumber String              @unique
+  make               String
+  model              String
+  year               Int
+  slug               String              @unique
+  description        String
+  category           String
+  transmission       String
+  fuelType           String
+  seatingCapacity    Int
+  luggageCapacity    Int
+  dailyRate          Decimal             @db.Decimal(10, 2)
+  weeklyRate         Decimal             @db.Decimal(10, 2)
+  monthlyRate        Decimal             @db.Decimal(10, 2)
+  currency           String              @default("PKR")
+  operationalStatus  OperationalStatus   @default(AVAILABLE)
+  isPublished        Boolean             @default(true)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  images             CarImage[]
+  bookings           Booking[]
+  maintenanceRecords MaintenanceRecord[]
+
+  @@index([slug])
+  @@index([operationalStatus, isPublished])
+}
+
+model CarImage {
+  id        String   @id @default(uuid())
+  carId     String
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  imageUrl  String
+  altText   String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([carId, sortOrder])
+}
+
+model RentalExtra {
+  id          String             @id @default(uuid())
+  name        String
+  description String?
+  price       Decimal            @db.Decimal(10, 2)
+  priceType   ExtraPriceType     @default(PER_DAY)
+  isActive    Boolean            @default(true)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  items       BookingExtraItem[]
+}
+
+model Booking {
+  id               String             @id @default(uuid())
+  bookingReference String             @unique
+  customerId       String
+  customer         Customer           @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  carId            String
+  car              Car                @relation(fields: [carId], references: [id], onDelete: Restrict)
+  pickupDateTime   DateTime
+  returnDateTime   DateTime
+  pickupLocation   String
+  returnLocation   String
+  status           BookingStatus      @default(PENDING)
+  rentalPrice      Decimal            @db.Decimal(10, 2)
+  extrasTotal      Decimal            @default(0) @db.Decimal(10, 2)
+  discount         Decimal            @default(0) @db.Decimal(10, 2)
+  depositAmount    Decimal            @default(0) @db.Decimal(10, 2)
+  totalAmount      Decimal            @db.Decimal(10, 2)
+  amountPaid       Decimal            @default(0) @db.Decimal(10, 2)
+  currency         String             @default("PKR")
+  customerNotes    String?
+  internalNotes    String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  extras           BookingExtraItem[]
+  payments         Payment[]
+  auditLogs        BookingAuditLog[]
+
+  @@index([carId, pickupDateTime, returnDateTime])
+  @@index([status])
+  @@index([customerId])
+  @@index([bookingReference])
+}
+
+model BookingExtraItem {
+  id            String      @id @default(uuid())
+  bookingId     String
+  booking       Booking     @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  extraId       String
+  extra         RentalExtra @relation(fields: [extraId], references: [id], onDelete: Restrict)
+  nameSnapshot  String
+  priceSnapshot Decimal     @db.Decimal(10, 2)
+  quantity      Int         @default(1)
+
+  @@index([bookingId])
+}
+
+model Payment {
+  id                   String        @id @default(uuid())
+  bookingId            String
+  booking              Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  amount               Decimal       @db.Decimal(10, 2)
+  currency             String        @default("PKR")
+  paymentMethod        PaymentMethod @default(CASH)
+  paymentType          PaymentType   @default(RENTAL)
+  status               PaymentStatus @default(COMPLETED)
+  transactionReference String?
+  notes                String?
+  paidAt               DateTime      @default(now())
+  createdAt            DateTime      @default(now())
+
+  @@index([bookingId])
+}
+
+model MaintenanceRecord {
+  id            String            @id @default(uuid())
+  carId         String
+  car           Car               @relation(fields: [carId], references: [id], onDelete: Cascade)
+  startDateTime DateTime
+  endDateTime   DateTime?
+  description   String
+  cost          Decimal?          @db.Decimal(10, 2)
+  status        MaintenanceStatus @default(SCHEDULED)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@index([carId, startDateTime])
+}
+
+model BookingAuditLog {
+  id        String         @id @default(uuid())
+  bookingId String
+  booking   Booking        @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  userId    String?
+  user      User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  fromStatus BookingStatus?
+  toStatus   BookingStatus?
+  details   String?
+  createdAt DateTime       @default(now())
+
+  @@index([bookingId])
+}
+
+model BusinessSettings {
+  id                    Int      @id @default(1)
+  companyName           String   @default("Warraich Motors Gujrat")
+  contactPhone          String   @default("+92 300 1234567")
+  contactEmail          String   @default("info@warraichmotors.pk")
+  address               String   @default("GT Road, Gujrat, Punjab, Pakistan")
+  currency              String   @default("PKR")
+  timezone              String   @default("Asia/Karachi")
+  turnaroundBufferHours Int      @default(2)
+  blockingStatuses      String   @default("PENDING,CONFIRMED,ACTIVE")
+  defaultRentalRules    String   @default("Minimum driver age 21. Valid driving licence and original CNIC/Passport required.")
+  bookingPolicy         String   @default("Bookings are reviewed manually by staff. Confirmation sent via email/SMS.")
+  cancellationPolicy    String   @default("Free cancellation up to 24 hours prior to pickup.")
+  updatedAt             DateTime @updatedAt
+}
