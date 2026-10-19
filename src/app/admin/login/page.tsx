@@ -8,8 +8,8 @@ import Link from "next/link";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("admin@warraichmotors.pk");
-  const [password, setPassword] = useState("Admin@12345");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -18,20 +18,25 @@ export default function AdminLoginPage() {
     setError(null);
     setIsLoading(true);
 
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("password", password);
+    try {
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("password", password);
 
-    const res = await loginAction(null, formData);
-    setIsLoading(false);
+      const res = await loginAction(null, formData);
 
-    if (!res.success) {
-      setError(res.error || "Authentication failed");
-      return;
+      if (!res.success) {
+        setError(res.error || "Authentication failed");
+        setIsLoading(false);
+        return;
+      }
+
+      router.push("/admin");
+      router.refresh();
+    } catch (err: any) {
+      setError(err?.message || "An unexpected error occurred during sign in.");
+      setIsLoading(false);
     }
-
-    router.push("/admin");
-    router.refresh();
   };
 
   return (
@@ -107,20 +112,7 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        {/* Demo credentials hint */}
-        <div className="mt-8 pt-6 border-t border-slate-100 text-xs text-slate-500 space-y-2">
-          <div className="font-semibold text-slate-700">Pre-configured Demo Accounts:</div>
-          <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200 font-mono text-[11px] space-y-1">
-            <div>
-              <strong>Admin:</strong> admin@warraichmotors.pk / Admin@12345
-            </div>
-            <div>
-              <strong>Staff:</strong> staff@warraichmotors.pk / Staff@12345
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-6 text-center">
+        <div className="mt-8 text-center">
           <Link href="/" className="text-xs text-slate-500 hover:text-blue-600 transition">
             &larr; Return to Public Website
           </Link>
