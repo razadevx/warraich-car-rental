@@ -1,10 +1,17 @@
 import { MapPin, Phone, Mail, Clock, MessageSquare } from "lucide-react";
 import { prisma } from "@/lib/db";
+import { FALLBACK_SETTINGS } from "@/lib/fallback-data";
 
 export const dynamic = "force-dynamic";
 
 export default async function ContactPage() {
-  const settings = await prisma.businessSettings.findFirst();
+  let settings: any = FALLBACK_SETTINGS;
+  try {
+    const dbSettings = await prisma.businessSettings.findFirst();
+    if (dbSettings) settings = dbSettings;
+  } catch {
+    settings = FALLBACK_SETTINGS;
+  }
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12">

@@ -15,27 +15,51 @@ import {
   Sparkles,
 } from "lucide-react";
 
+import { FALLBACK_CARS, FALLBACK_SETTINGS } from "@/lib/fallback-data";
+
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const featuredCars = await prisma.car.findMany({
-    where: {
-      isPublished: true,
-      operationalStatus: "AVAILABLE",
-    },
-    include: {
-      images: {
-        orderBy: { sortOrder: "asc" },
-      },
-    },
-    take: 6,
-    orderBy: { dailyRate: "desc" },
-  });
+  let featuredCars: any[] = [];
+  let settings: any = FALLBACK_SETTINGS;
+  let isDbConnected = true;
 
-  const settings = await prisma.businessSettings.findFirst();
+  try {
+    featuredCars = await prisma.car.findMany({
+      where: {
+        isPublished: true,
+        operationalStatus: "AVAILABLE",
+      },
+      include: {
+        images: {
+          orderBy: { sortOrder: "asc" },
+        },
+      },
+      take: 6,
+      orderBy: { dailyRate: "desc" },
+    });
+
+    const dbSettings = await prisma.businessSettings.findFirst();
+    if (dbSettings) settings = dbSettings;
+
+    if (featuredCars.length === 0) {
+      featuredCars = FALLBACK_CARS;
+    }
+  } catch (error) {
+    console.warn("Database unavailable or not migrated yet. Falling back to default fleet.", error);
+    isDbConnected = false;
+    featuredCars = FALLBACK_CARS;
+    settings = FALLBACK_SETTINGS;
+  }
 
   return (
     <div>
+      {!isDbConnected && (
+        <div className="bg-amber-500/10 border-b border-amber-500/20 text-amber-900 px-4 py-2.5 text-xs text-center">
+          <strong>Database Notice:</strong> Currently showing initial demo fleet. Connect your Neon PostgreSQL database to enable live bookings.
+        </div>
+      )}
+
       {/* Hero Section */}
       <section className="relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-900 text-white pt-12 pb-24 overflow-hidden">
         {/* Subtle grid pattern */}

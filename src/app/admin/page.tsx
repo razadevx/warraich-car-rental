@@ -29,65 +29,85 @@ export default async function AdminDashboardPage() {
   endOfToday.setHours(23, 59, 59, 999);
 
   // 1. Fetch real summary statistics
-  const [
-    totalCars,
-    availableCars,
-    activeRentals,
-    pendingRequests,
-    upcomingPickups,
-    dueReturns,
-    allBookings,
-  ] = await Promise.all([
-    prisma.car.count(),
-    prisma.car.count({ where: { operationalStatus: "AVAILABLE", isPublished: true } }),
-    prisma.booking.count({ where: { status: "ACTIVE" } }),
-    prisma.booking.count({ where: { status: "PENDING" } }),
-    prisma.booking.count({
-      where: {
-        status: "CONFIRMED",
-        pickupDateTime: { gte: now },
-      },
-    }),
-    prisma.booking.count({
-      where: {
-        status: "ACTIVE",
-        returnDateTime: { lte: endOfToday },
-      },
-    }),
-    prisma.booking.findMany({
-      where: { status: { not: "CANCELLED" } },
-      select: { totalAmount: true, amountPaid: true, currency: true },
-    }),
-  ]);
-
-  // Compute total outstanding balance across active/confirmed rentals
+  let totalCars = 0;
+  let availableCars = 0;
+  let activeRentals = 0;
+  let pendingRequests = 0;
+  let upcomingPickups = 0;
+  let dueReturns = 0;
   let totalOutstanding = 0;
-  for (const b of allBookings) {
-    const diff = Number(b.totalAmount) - Number(b.amountPaid);
-    if (diff > 0) totalOutstanding += diff;
+  let recentPending: any[] = [];
+  let activeBookings: any[] = [];
+
+  try {
+    const [
+      tc,
+      ac,
+      ar,
+      pr,
+      up,
+      dr,
+      allBookings,
+      pendingList,
+      activeList,
+    ] = await Promise.all([
+      prisma.car.count(),
+      prisma.car.count({ where: { operationalStatus: "AVAILABLE", isPublished: true } }),
+      prisma.booking.count({ where: { status: "ACTIVE" } }),
+      prisma.booking.count({ where: { status: "PENDING" } }),
+      prisma.booking.count({
+        where: {
+          status: "CONFIRMED",
+          pickupDateTime: { gte: now },
+        },
+      }),
+      prisma.booking.count({
+        where: {
+          status: "ACTIVE",
+          returnDateTime: { lte: endOfToday },
+        },
+      }),
+      prisma.booking.findMany({
+        where: { status: { not: "CANCELLED" } },
+        select: { totalAmount: true, amountPaid: true, currency: true },
+      }),
+      prisma.booking.findMany({
+        where: { status: "PENDING" },
+        include: {
+          car: true,
+          customer: true,
+        },
+        orderBy: { createdAt: "desc" },
+        take: 5,
+      }),
+      prisma.booking.findMany({
+        where: { status: "ACTIVE" },
+        include: {
+          car: true,
+          customer: true,
+        },
+        orderBy: { returnDateTime: "asc" },
+        take: 5,
+      }),
+    ]);
+
+    totalCars = tc;
+    availableCars = ac;
+    activeRentals = ar;
+    pendingRequests = pr;
+    upcomingPickups = up;
+    dueReturns = dr;
+    recentPending = pendingList;
+    activeBookings = activeList;
+
+    for (const b of allBookings) {
+      const diff = Number(b.totalAmount) - Number(b.amountPaid);
+      if (diff > 0) totalOutstanding += diff;
+    }
+  } catch (err) {
+    console.warn("Database not accessible in admin dashboard:", err);
   }
 
-  // 2. Fetch recent pending booking requests that require staff review
-  const recentPending = await prisma.booking.findMany({
-    where: { status: "PENDING" },
-    include: {
-      car: true,
-      customer: true,
-    },
-    orderBy: { createdAt: "desc" },
-    take: 5,
-  });
-
-  // 3. Fetch active rentals
-  const activeBookings = await prisma.booking.findMany({
-    where: { status: "ACTIVE" },
-    include: {
-      car: true,
-      customer: true,
-    },
-    orderBy: { returnDateTime: "asc" },
-    take: 5,
-  });
 
   return (
     <div className="space-y-8">

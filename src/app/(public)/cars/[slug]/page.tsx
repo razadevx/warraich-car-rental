@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+import { FALLBACK_CARS, FALLBACK_EXTRAS } from "@/lib/fallback-data";
+
 export const dynamic = "force-dynamic";
 
 interface CarDetailPageProps {
@@ -22,25 +24,37 @@ interface CarDetailPageProps {
 }
 
 export default async function CarDetailPage({ params, searchParams }: CarDetailPageProps) {
-  const car = await prisma.car.findUnique({
-    where: { slug: params.slug },
-    include: {
-      images: {
-        orderBy: { sortOrder: "asc" },
+  let car: any = null;
+  let extras: any[] = FALLBACK_EXTRAS;
+
+  try {
+    car = await prisma.car.findUnique({
+      where: { slug: params.slug },
+      include: {
+        images: {
+          orderBy: { sortOrder: "asc" },
+        },
       },
-    },
-  });
+    });
+
+    if (car) {
+      const dbExtras = await prisma.rentalExtra.findMany({
+        where: { isActive: true },
+        orderBy: { price: "asc" },
+      });
+      if (dbExtras.length > 0) extras = dbExtras;
+    }
+  } catch (err) {
+    console.warn("Database offline in car details, using fallback:", err);
+  }
+
+  if (!car) {
+    car = FALLBACK_CARS.find((c) => c.slug === params.slug);
+  }
 
   if (!car || !car.isPublished) {
     notFound();
   }
-
-  const extras = await prisma.rentalExtra.findMany({
-    where: { isActive: true },
-    orderBy: { price: "asc" },
-  });
-
-  const settings = await prisma.businessSettings.findFirst();
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -89,9 +103,9 @@ export default async function CarDetailPage({ params, searchParams }: CarDetailP
             </div>
             {car.images.length > 1 && (
               <div className="grid grid-cols-4 gap-3">
-                {car.images.slice(1).map((img, idx) => (
+                {car.images.slice(1).map((img: any, idx: number) => (
                   <div
-                    key={img.id}
+                    key={img.id || idx}
                     className="relative aspect-[16/10] bg-slate-100 rounded-lg overflow-hidden border border-slate-200"
                   >
                     <img

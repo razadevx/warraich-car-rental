@@ -8,12 +8,13 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getCurrentUser();
+  const user = await getCurrentUser().catch(() => null);
 
   // If user is not authenticated, render cleanly (e.g. for /admin/login)
   if (!user) {
     return <>{children}</>;
   }
+
 
   return (
     <div className="min-h-screen flex bg-slate-50 text-slate-900">

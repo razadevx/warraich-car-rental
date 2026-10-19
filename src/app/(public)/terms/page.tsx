@@ -1,10 +1,17 @@
 import { prisma } from "@/lib/db";
 import { ShieldCheck, FileText, CheckCircle2, AlertCircle } from "lucide-react";
+import { FALLBACK_SETTINGS } from "@/lib/fallback-data";
 
 export const dynamic = "force-dynamic";
 
 export default async function TermsPage() {
-  const settings = await prisma.businessSettings.findFirst();
+  let settings: any = FALLBACK_SETTINGS;
+  try {
+    const dbSettings = await prisma.businessSettings.findFirst();
+    if (dbSettings) settings = dbSettings;
+  } catch {
+    settings = FALLBACK_SETTINGS;
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-10">

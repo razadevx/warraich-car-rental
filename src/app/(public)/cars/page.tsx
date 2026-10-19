@@ -3,6 +3,7 @@ import { CarCard } from "@/components/public/CarCard";
 import { checkCarAvailability } from "@/lib/booking-engine/availability";
 import { Filter, Calendar, AlertCircle } from "lucide-react";
 import Link from "next/link";
+import { FALLBACK_CARS } from "@/lib/fallback-data";
 
 export const dynamic = "force-dynamic";
 
@@ -16,31 +17,44 @@ interface CarsPageProps {
   };
 }
 
+
 export default async function CarsPage({ searchParams }: CarsPageProps) {
   const { pickup, return: returnDate, category, transmission } = searchParams;
 
-  // Build Prisma filter
-  const whereClause: any = {
-    isPublished: true,
-  };
+  let allCars: any[] = [];
+  try {
+    const whereClause: any = {
+      isPublished: true,
+    };
 
-  if (category && category !== "ALL") {
-    whereClause.category = category;
-  }
+    if (category && category !== "ALL") {
+      whereClause.category = category;
+    }
 
-  if (transmission && transmission !== "ALL") {
-    whereClause.transmission = transmission.toUpperCase();
-  }
+    if (transmission && transmission !== "ALL") {
+      whereClause.transmission = transmission.toUpperCase();
+    }
 
-  const allCars = await prisma.car.findMany({
-    where: whereClause,
-    include: {
-      images: {
-        orderBy: { sortOrder: "asc" },
+    allCars = await prisma.car.findMany({
+      where: whereClause,
+      include: {
+        images: {
+          orderBy: { sortOrder: "asc" },
+        },
       },
-    },
-    orderBy: { dailyRate: "asc" },
-  });
+      orderBy: { dailyRate: "asc" },
+    });
+
+    if (allCars.length === 0 && !category) {
+      allCars = FALLBACK_CARS;
+    }
+  } catch (err) {
+    console.warn("Database offline in /cars, using fallback fleet:", err);
+    allCars = FALLBACK_CARS.filter((c) => {
+      if (category && category !== "ALL" && c.category !== category) return false;
+      return true;
+    });
+  }
 
   // If date range is specified, evaluate availability for each car
   let hasDateFilter = false;
@@ -53,13 +67,17 @@ export default async function CarsPage({ searchParams }: CarsPageProps) {
 
     if (returnParsed.getTime() > pickupParsed.getTime()) {
       hasDateFilter = true;
-      for (const car of allCars) {
-        const avail = await checkCarAvailability(car.id, pickupParsed, returnParsed);
-        if (avail.isAvailable) {
-          availableCars.push(car);
-        } else {
-          unavailableCars.push(car);
+      try {
+        for (const car of allCars) {
+          const avail = await checkCarAvailability(car.id, pickupParsed, returnParsed);
+          if (avail.isAvailable) {
+            availableCars.push(car);
+          } else {
+            unavailableCars.push(car);
+          }
         }
+      } catch {
+        availableCars = allCars;
       }
     } else {
       availableCars = allCars;
@@ -67,6 +85,7 @@ export default async function CarsPage({ searchParams }: CarsPageProps) {
   } else {
     availableCars = allCars;
   }
+
 
   const categories = [
     { label: "All Vehicles", value: "ALL" },
