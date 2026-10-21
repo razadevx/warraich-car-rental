@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { loginAction } from "@/app/actions/auth";
-import { Car, Lock, Mail, AlertCircle, Loader2 } from "lucide-react";
+import { Lock, Mail, AlertCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
 
 export default function AdminLoginPage() {
@@ -40,17 +41,23 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-900 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-slate-950 px-4 py-12">
       <div className="w-full max-w-md bg-white rounded-3xl p-8 sm:p-10 shadow-2xl border border-slate-800">
         <div className="text-center space-y-2 mb-8">
-          <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center font-bold mx-auto shadow-md">
-            <Car className="w-7 h-7" />
+          <div className="relative w-20 h-20 mx-auto">
+            <Image
+              src="/Warraich-Motors-logo.png"
+              alt="Warraich Motors Gujrat"
+              fill
+              className="object-contain"
+              priority
+            />
           </div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-            Warraich Motors
+          <h1 className="text-2xl font-black text-slate-950 tracking-tight">
+            Warraich Motors Gujrat
           </h1>
-          <p className="text-xs font-semibold text-blue-600 uppercase tracking-wider">
-            Internal Management Portal
+          <p className="text-xs font-bold text-red-600 uppercase tracking-wider">
+            Fleet Operations Staff Portal
           </p>
         </div>
 
@@ -72,8 +79,8 @@ export default function AdminLoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="staff@warraichmotors.pk"
-                className="w-full rounded-xl border border-slate-300 pl-10 pr-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="admin@warraichmotors.pk"
+                className="w-full rounded-xl border border-slate-300 pl-10 pr-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-red-500"
                 required
               />
             </div>
@@ -90,7 +97,7 @@ export default function AdminLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full rounded-xl border border-slate-300 pl-10 pr-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-xl border border-slate-300 pl-10 pr-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-red-500"
                 required
               />
             </div>
@@ -99,7 +106,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2 mt-2"
+            className="w-full bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-red-600/30 transition flex items-center justify-center gap-2 text-sm mt-2"
           >
             {isLoading ? (
               <>
@@ -113,7 +120,7 @@ export default function AdminLoginPage() {
         </form>
 
         <div className="mt-8 text-center">
-          <Link href="/" className="text-xs text-slate-500 hover:text-blue-600 transition">
+          <Link href="/" className="text-xs text-slate-500 hover:text-red-600 transition">
             &larr; Return to Public Website
           </Link>
         </div>

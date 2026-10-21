@@ -24,7 +24,7 @@ export function HeroSearch() {
 
   const [pickupDateTime, setPickupDateTime] = useState(getDefaultPickup());
   const [returnDateTime, setReturnDateTime] = useState(getDefaultReturn());
-  const [pickupLocation, setPickupLocation] = useState("Warraich Motors Hub, GT Road Gujrat");
+  const [pickupLocation, setPickupLocation] = useState("Warraich Motors Hub, GT Rd Small Industrial Area, Gujrat");
   const [category, setCategory] = useState("ALL");
 
   const handleSearch = (e: React.FormEvent) => {
@@ -47,32 +47,33 @@ export function HeroSearch() {
         {/* Location */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-            <MapPin className="w-3.5 h-3.5 text-blue-600" /> Pickup Location
+            <MapPin className="w-3.5 h-3.5 text-red-600" /> Pickup Location
           </label>
           <select
             value={pickupLocation}
             onChange={(e) => setPickupLocation(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 py-2.5 px-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+            className="w-full rounded-lg border border-slate-300 py-2.5 px-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500 bg-white"
           >
-            <option value="Warraich Motors Hub, GT Road Gujrat">Warraich Motors Hub, GT Road Gujrat</option>
-            <option value="Gujrat City Center / Court Road">Gujrat City Center / Court Road</option>
-            <option value="Sialkot International Airport (SKT)">Sialkot International Airport (SKT)</option>
-            <option value="Islamabad International Airport (ISB)">Islamabad International Airport (ISB)</option>
-            <option value="Lahore Allama Iqbal Airport (LHE)">Lahore Allama Iqbal Airport (LHE)</option>
-            <option value="Custom Address (Doorstep Delivery)">Custom Address (Doorstep Delivery)</option>
+            <option value="Warraich Motors Hub, GT Rd Small Industrial Area, Gujrat">Warraich Motors Hub (GT Rd, Small Industrial Area, Gujrat)</option>
+            <option value="Gujrat City Center / Court Road / Rehman Shaheed Rd">Gujrat City Center / Court Road / Rehman Shaheed Rd</option>
+            <option value="Kharian Cantt / Lalamusa / Jalalpur Jattan">Kharian Cantt / Lalamusa / Jalalpur Jattan</option>
+            <option value="Sialkot International Airport (SKT)">Sialkot International Airport (SKT) Delivery</option>
+            <option value="Islamabad International Airport (ISB)">Islamabad International Airport (ISB) Delivery</option>
+            <option value="Lahore Allama Iqbal Airport (LHE)">Lahore Allama Iqbal Airport (LHE) Delivery</option>
+            <option value="Custom Doorstep Address (Gujrat & Surroundings)">Custom Doorstep Address (Gujrat & Surroundings)</option>
           </select>
         </div>
 
         {/* Pickup Date & Time */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-            <Calendar className="w-3.5 h-3.5 text-blue-600" /> Pickup Date & Time
+            <Calendar className="w-3.5 h-3.5 text-red-600" /> Pickup Date & Time
           </label>
           <input
             type="datetime-local"
             value={pickupDateTime}
             onChange={(e) => setPickupDateTime(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 py-2.5 px-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-slate-300 py-2.5 px-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500"
             required
           />
         </div>
@@ -80,13 +81,13 @@ export function HeroSearch() {
         {/* Return Date & Time */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 text-blue-600" /> Return Date & Time
+            <Clock className="w-3.5 h-3.5 text-red-600" /> Return Date & Time
           </label>
           <input
             type="datetime-local"
             value={returnDateTime}
             onChange={(e) => setReturnDateTime(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 py-2.5 px-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-slate-300 py-2.5 px-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500"
             required
           />
         </div>
@@ -100,21 +101,21 @@ export function HeroSearch() {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="flex-1 rounded-lg border border-slate-300 py-2.5 px-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+              className="flex-1 rounded-lg border border-slate-300 py-2.5 px-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500 bg-white"
             >
               <option value="ALL">All Categories</option>
-              <option value="LUXURY_SUV">Luxury SUV</option>
-              <option value="SUV">SUV (4x4)</option>
-              <option value="SEDAN">Sedan</option>
-              <option value="ECONOMY">Economy</option>
-              <option value="VAN">Passenger Van</option>
+              <option value="LUXURY_SUV">Luxury SUV (Prado/V8)</option>
+              <option value="SUV">SUV 4x4 (Fortuner/Revo)</option>
+              <option value="SEDAN">Executive Sedan (Grande/Civic)</option>
+              <option value="ECONOMY">Economy (Yaris/Alto)</option>
+              <option value="VAN">Passenger Van (Hiace)</option>
             </select>
             <button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-5 rounded-lg flex items-center gap-1.5 shadow-md transition shrink-0"
+              className="bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-5 rounded-lg flex items-center gap-1.5 shadow-md shadow-red-600/30 transition shrink-0"
             >
               <Search className="w-4 h-4" />
-              <span>Search</span>
+              <span>Find Car</span>
             </button>
           </div>
         </div>

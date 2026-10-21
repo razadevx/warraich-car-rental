@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Car, Phone, Mail, MapPin, ShieldCheck, Clock } from "lucide-react";
+import Image from "next/image";
+import { Phone, Mail, MapPin, Clock, MessageCircle, ShieldCheck } from "lucide-react";
 
 export function Footer() {
   return (
@@ -8,47 +9,65 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand info */}
           <div className="space-y-4 md:col-span-1">
-            <div className="flex items-center gap-2 text-white font-bold text-lg">
-              <div className="w-8 h-8 rounded bg-blue-600 flex items-center justify-center text-white">
-                <Car className="w-5 h-5" />
+            <div className="flex items-center gap-3 text-white font-bold text-lg">
+              <div className="relative w-12 h-12 shrink-0">
+                <Image
+                  src="/Warraich-Motors-logo.png"
+                  alt="Warraich Motors Gujrat"
+                  fill
+                  className="object-contain"
+                />
               </div>
-              <span>WARRAICH MOTORS</span>
+              <div className="leading-tight">
+                <div className="font-black text-white text-lg tracking-tight">
+                  WARRAICH <span className="text-red-500">MOTORS</span>
+                </div>
+                <div className="text-[10px] tracking-wider text-slate-400 font-semibold uppercase">
+                  And Rent A Car &bull; Gujrat
+                </div>
+              </div>
             </div>
             <p className="text-sm text-slate-400 leading-relaxed">
-              Gujrat's trusted car rental service. Delivering premium SUVs, elegant sedans, and commercial vans with guaranteed mechanical reliability, chauffeur options, and transparent billing.
+              Gujrat's premier car rental service. Delivering late-model SUVs, luxury wedding protocol vehicles, and dependable sedans with verified chauffeurs, doorstep delivery, and 24/7 support.
             </p>
-            <div className="text-xs text-slate-500">
-              Government Registered Fleet Operator &bull; Gujrat, Punjab
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-red-950/60 border border-red-800/40 text-red-300 text-xs font-semibold">
+              <ShieldCheck className="w-3.5 h-3.5 text-red-400" />
+              <span>Registered Fleet &bull; Small Industrial Area, Gujrat</span>
             </div>
           </div>
 
           {/* Quick Links */}
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-white tracking-wider uppercase">Our Fleet</h3>
+            <h3 className="text-sm font-bold text-white tracking-wider uppercase">Our Popular Fleet</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/cars?category=LUXURY_SUV" className="hover:text-white transition">
-                  Luxury SUVs (Prado TX)
+                <Link href="/cars?category=LUXURY_SUV" className="hover:text-red-400 transition">
+                  Toyota Land Cruiser Prado TX
                 </Link>
               </li>
               <li>
-                <Link href="/cars?category=SUV" className="hover:text-white transition">
-                  4x4 Off-Road (Fortuner)
+                <Link href="/cars?category=SUV" className="hover:text-red-400 transition">
+                  Toyota Fortuner Legender 4x4
                 </Link>
               </li>
               <li>
-                <Link href="/cars?category=SEDAN" className="hover:text-white transition">
-                  Executive Sedans (Civic & Corolla)
+                <Link href="/cars?category=SEDAN" className="hover:text-red-400 transition">
+                  Toyota Corolla Altis Grande 1.8
                 </Link>
               </li>
               <li>
-                <Link href="/cars?category=ECONOMY" className="hover:text-white transition">
-                  Economy Commuters (Yaris)
+                <Link href="/cars?category=SEDAN" className="hover:text-red-400 transition">
+                  Honda Civic RS Turbo 1.5L
                 </Link>
               </li>
               <li>
-                <Link href="/cars?category=VAN" className="hover:text-white transition">
-                  Family Hiace Vans (14-Seater)
+                <Link href="/cars?category=ECONOMY" className="hover:text-red-400 transition">
+                  Toyota Yaris & Suzuki Alto 660cc
+                </Link>
+              </li>
+              <li>
+                <Link href="/cars?category=VAN" className="hover:text-red-400 transition">
+                  Toyota Hiace Grand Cabin (14-Seater)
                 </Link>
               </li>
             </ul>
@@ -56,31 +75,31 @@ export function Footer() {
 
           {/* Rental Policies */}
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-white tracking-wider uppercase">Information</h3>
+            <h3 className="text-sm font-bold text-white tracking-wider uppercase">Information</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/about" className="hover:text-white transition">
+                <Link href="/about" className="hover:text-red-400 transition">
                   About Warraich Motors
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="hover:text-white transition">
-                  Rental Rules & Policies
+                <Link href="/terms" className="hover:text-red-400 transition">
+                  Rental Rules & Requirement
                 </Link>
               </li>
               <li>
-                <Link href="/terms#cancellation" className="hover:text-white transition">
-                  Cancellation & Refunds
+                <Link href="/terms#cancellation" className="hover:text-red-400 transition">
+                  Cancellation & Refund Policy
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="hover:text-white transition">
+                <Link href="/privacy" className="hover:text-red-400 transition">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-white transition">
-                  Contact & Location
+                <Link href="/contact" className="hover:text-red-400 transition">
+                  Contact Hub & Location
                 </Link>
               </li>
             </ul>
@@ -88,23 +107,45 @@ export function Footer() {
 
           {/* Contact Details */}
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-white tracking-wider uppercase">Gujrat Hub</h3>
-            <div className="space-y-2.5 text-sm">
+            <h3 className="text-sm font-bold text-white tracking-wider uppercase">Gujrat Hub Location</h3>
+            <div className="space-y-3 text-sm">
               <div className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
-                <span>GT Road, Gujrat, Punjab, Pakistan</span>
+                <MapPin className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                <span className="leading-snug text-slate-300">
+                  Mian, GT Rd, Small Industrial Area, Punjab, Gujrat, 50700
+                </span>
               </div>
               <div className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span>+92 300 1234567</span>
+                <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
+                <a href="tel:+923136225135" className="hover:text-white font-semibold text-slate-200">
+                  0313 6225135
+                </a>
               </div>
               <div className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-amber-500 shrink-0" />
-                <span>info@warraichmotors.pk</span>
+                <MessageCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+                <a
+                  href="https://wa.me/923136225135"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-emerald-300 text-emerald-400 font-semibold"
+                >
+                  WhatsApp: 0313 6225135
+                </a>
               </div>
               <div className="flex items-center gap-2.5">
-                <Clock className="w-4 h-4 text-purple-500 shrink-0" />
-                <span>24/7 Dispatch & Roadside Assistance</span>
+                <Mail className="w-4 h-4 text-red-400 shrink-0" />
+                <a
+                  href="mailto:warraichmotorsgujrat@gmail.com"
+                  className="hover:text-white text-slate-300 break-all"
+                >
+                  warraichmotorsgujrat@gmail.com
+                </a>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Clock className="w-4 h-4 text-amber-400 shrink-0" />
+                <span className="text-xs text-amber-200 font-medium">
+                  24/7 Dispatch & Roadside Helpline
+                </span>
               </div>
             </div>
           </div>

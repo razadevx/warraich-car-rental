@@ -10,9 +10,9 @@ interface SettingsFormProps {
 
 export function SettingsForm({ initialSettings }: SettingsFormProps) {
   const [companyName, setCompanyName] = useState(initialSettings?.companyName || "Warraich Motors Gujrat");
-  const [contactPhone, setContactPhone] = useState(initialSettings?.contactPhone || "+92 300 1234567");
-  const [contactEmail, setContactEmail] = useState(initialSettings?.contactEmail || "info@warraichmotors.pk");
-  const [address, setAddress] = useState(initialSettings?.address || "GT Road, Gujrat, Punjab, Pakistan");
+  const [contactPhone, setContactPhone] = useState(initialSettings?.contactPhone || "0313 6225135");
+  const [contactEmail, setContactEmail] = useState(initialSettings?.contactEmail || "warraichmotorsgujrat@gmail.com");
+  const [address, setAddress] = useState(initialSettings?.address || "Mian, GT Rd, Small Industrial Area, Punjab, Gujrat, 50700");
   const [currency, setCurrency] = useState(initialSettings?.currency || "PKR");
   const [timezone, setTimezone] = useState(initialSettings?.timezone || "Asia/Karachi");
   const [turnaroundBufferHours, setTurnaroundBufferHours] = useState(

@@ -10,6 +10,20 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        brand: {
+          50: "#fff1f2",
+          100: "#ffe4e6",
+          200: "#fecdd3",
+          300: "#fda4af",
+          400: "#fb7185",
+          500: "#e11d48",
+          600: "#c8102e",
+          700: "#b91c1c",
+          800: "#991b1b",
+          900: "#7f1d1d",
+          dark: "#0b0f17",
+          card: "#121824",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

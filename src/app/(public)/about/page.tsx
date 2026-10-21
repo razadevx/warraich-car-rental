@@ -4,7 +4,7 @@ export default function AboutPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12">
       <div className="text-center max-w-2xl mx-auto space-y-3">
-        <div className="text-xs font-bold text-blue-600 uppercase tracking-wider">
+        <div className="text-xs font-bold text-red-600 uppercase tracking-wider">
           About Warraich Motors Gujrat
         </div>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
@@ -17,7 +17,7 @@ export default function AboutPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm space-y-3 text-center">
-          <div className="w-12 h-12 mx-auto rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+          <div className="w-12 h-12 mx-auto rounded-xl bg-red-100 text-red-600 flex items-center justify-center">
             <Award className="w-6 h-6" />
           </div>
           <h3 className="font-bold text-slate-900">Uncompromising Maintenance</h3>
@@ -47,14 +47,14 @@ export default function AboutPage() {
         </div>
       </div>
 
-      <div className="bg-slate-900 text-white rounded-3xl p-8 sm:p-10 space-y-4">
+      <div className="bg-slate-950 text-white rounded-3xl p-8 sm:p-10 space-y-4 border border-red-950">
         <h2 className="text-2xl font-bold">Main Headquarters & Depot</h2>
         <p className="text-sm text-slate-300 leading-relaxed max-w-2xl">
           Located prominently along the historic Grand Trunk (GT) Road in Gujrat, our facility features a secure vehicle dispatch yard, customer reception lounge, and dedicated servicing bays.
         </p>
-        <div className="pt-2 text-xs text-slate-400 flex items-center gap-2">
-          <MapPin className="w-4 h-4 text-blue-400" />
-          <span>GT Road, Gujrat, Punjab, Pakistan</span>
+        <div className="pt-2 text-xs text-slate-300 flex items-center gap-2">
+          <MapPin className="w-4 h-4 text-red-500" />
+          <span>Mian, GT Rd, Small Industrial Area, Punjab, Gujrat, 50700</span>
         </div>
       </div>
     </div>

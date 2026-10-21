@@ -267,19 +267,28 @@ export default async function BookingStatusPage({
           </div>
 
           <div className="bg-slate-900 text-white p-6 rounded-2xl shadow-sm space-y-4">
-            <h2 className="text-sm font-bold uppercase tracking-wider text-blue-400">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-red-400">
               Need Assistance?
             </h2>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Have questions regarding flight delay, location change, or payment? Contact Warraich Motors directly:
+              Have questions regarding flight delay, location change, or payment? Contact Warraich Motors Gujrat directly:
             </p>
             <div className="space-y-2 text-xs">
               <a
-                href={`tel:${settings?.contactPhone || "+923001234567"}`}
+                href={`tel:${settings?.contactPhone || "03136225135"}`}
                 className="flex items-center gap-2 p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-semibold transition"
               >
                 <Phone className="w-4 h-4 text-emerald-400" />
-                <span>Call Hotline ({settings?.contactPhone || "+92 300 1234567"})</span>
+                <span>Call Hotline ({settings?.contactPhone || "0313 6225135"})</span>
+              </a>
+              <a
+                href="https://wa.me/923136225135"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 p-2.5 rounded-lg bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-800 text-emerald-300 font-semibold transition"
+              >
+                <Phone className="w-4 h-4 text-emerald-400" />
+                <span>WhatsApp Dispatch: 0313 6225135</span>
               </a>
             </div>
           </div>

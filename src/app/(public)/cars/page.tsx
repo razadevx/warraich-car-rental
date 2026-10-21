@@ -124,7 +124,7 @@ export default async function CarsPage({ searchParams }: CarsPageProps) {
                 href={`/cars?${params.toString()}`}
                 className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition ${
                   isSelected
-                    ? "bg-blue-600 text-white"
+                    ? "bg-red-600 text-white shadow-sm"
                     : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                 }`}
               >
@@ -136,7 +136,7 @@ export default async function CarsPage({ searchParams }: CarsPageProps) {
 
         {/* Date Filter Indicator */}
         {hasDateFilter ? (
-          <div className="flex items-center gap-2 text-xs bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg border border-blue-200">
+          <div className="flex items-center gap-2 text-xs bg-red-50 text-red-700 px-3 py-1.5 rounded-lg border border-red-200">
             <Calendar className="w-3.5 h-3.5" />
             <span>
               Dates: {new Date(pickup!).toLocaleDateString()} &rarr; {new Date(returnDate!).toLocaleDateString()}
